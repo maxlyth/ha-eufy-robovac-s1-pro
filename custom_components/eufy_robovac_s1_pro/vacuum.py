@@ -227,8 +227,7 @@ class RobovacVacuum(CoordinatorEntity, StateVacuumEntity):
 
     _attr_name = "Eufy Robovac S1 Pro"
     _attr_supported_features = (
-        VacuumEntityFeature.BATTERY
-        | VacuumEntityFeature.PAUSE
+        VacuumEntityFeature.PAUSE
         | VacuumEntityFeature.RETURN_HOME
         | VacuumEntityFeature.START
         | VacuumEntityFeature.STATE
@@ -346,31 +345,6 @@ class RobovacVacuum(CoordinatorEntity, StateVacuumEntity):
         
         # デフォルト
         return VacuumActivity.IDLE
-
-    @property
-    def battery_level(self) -> int | None:
-        """Returns the battery level as a percentage"""
-        if self.coordinator.data:
-            # S1 Pro uses DPS 8 for battery level (confirmed from logs)
-            value = self.coordinator.data.get("8")
-            if value is not None:
-                try:
-                    battery = int(value)
-                    if 0 <= battery <= 100:
-                        return battery
-                except (ValueError, TypeError):
-                    pass
-            
-            # Fallback to DPS 163
-            value = self.coordinator.data.get("163")
-            if value is not None:
-                try:
-                    battery = int(value)
-                    if 0 <= battery <= 100:
-                        return battery
-                except (ValueError, TypeError):
-                    pass
-        return None
 
     @property
     def state_attributes(self) -> dict[str, Any]:

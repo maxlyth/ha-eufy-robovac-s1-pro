@@ -121,6 +121,10 @@ Pull requests are welcome!
 
 ## Changelog
 
+### v1.0.6
+- **Fix: Remove deprecated `battery_level` property and `BATTERY` supported feature** — Home Assistant Core 2026.8 removes both `StateVacuumEntity.battery_level` and `VacuumEntityFeature.BATTERY`; the integration emits two deprecation warnings on 2026.4.x. Battery reporting continues via the existing `sensor.<device>_battery` entity (added in v1.0.5; `device_class: battery`, unit `%`).
+- **Breaking change for templates**: any template using `state_attr('vacuum.<device>', 'battery_level')` or `attributes.battery_level` must migrate to `states('sensor.<device>_battery')`. The vacuum entity's `unique_id` and state history are unchanged.
+
 ### v1.0.5
 - **Add: Consumable remaining-% sensors (8 components)** — Side Brush, Rolling Brush, High-Performance Filter, Sensors, Rolling Mop, Dirty Water Tank Filter, Mop Cleaning Tray, Dirty Water Tank. Values match the Eufy app's "Maintenance" screen within rounding. Decoded from DPS 168 (`ConsumableResponse` protobuf — `runtime` submessage with one `Duration` per component, single varint at field 22 in minutes). Per-component lifetime ceilings are hard-coded from the Eufy app's display.
 - **Docs: Revise Known Limitations** — Removed the prior "maintenance status is not exposed" note: consumable values *are* available locally; only the reset command isn't.
